@@ -187,7 +187,8 @@ const courseData = {
 }
 
 export default async function CoursePage({ params }: { params: { slug: string } }) {
-  const course = courseData[params.slug as keyof typeof courseData]
+  const { slug } = await params
+  const course = courseData[slug as keyof typeof courseData]
 
   if (!course) {
     return (
@@ -471,7 +472,7 @@ export default async function CoursePage({ params }: { params: { slug: string } 
           <p className="text-xl mb-8 opacity-90">Join hundreds of successful sellers who started with {course.name}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8" asChild>
-              <Link href={`/checkout?course=${params.slug}`}>Enroll Now - {course.fee}</Link>
+              <Link href={`/checkout?course=${slug}`}>Enroll Now - {course.fee}</Link>
             </Button>
             <Button
               size="lg"
