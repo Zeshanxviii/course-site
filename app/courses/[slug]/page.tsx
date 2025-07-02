@@ -477,10 +477,9 @@ export default async function CoursePage({ params }: { params: { slug: string } 
             <Button
               size="lg"
               variant="outline"
-              className="text-lg px-8 text-white border-white hover:bg-white hover:text-blue-600"
+              className="text-lg px-8 text-black border-white hover:bg-white hover:text-blue-600"
             >
-              <Play className="mr-2 h-5 w-5" />
-              Watch Demo First
+               <Link href="/inquiry">Enquiry</Link>
             </Button>
           </div>
         </div>
