@@ -148,6 +148,7 @@ const mockAnalyticsData = {
 export default function AdminDashboard() {
   const router = useRouter()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [enquiries, setEnquiries] = useState(mockEnquiries)
 
   useEffect(() => {
     const adminAuth = localStorage.getItem("adminAuth")
@@ -164,13 +165,19 @@ export default function AdminDashboard() {
     router.push("/admin/login")
   }
 
+  const handleMarkComplete = (enquiryId: number) => {
+    setEnquiries((prevEnquiries) =>
+      prevEnquiries.map((enquiry) => (enquiry.id === enquiryId ? { ...enquiry, status: "completed" } : enquiry)),
+    )
+  }
+
   if (!isAuthenticated) {
     return <div>Loading...</div>
   }
 
   const enrolledStudents = mockStudents.filter((s) => s.status === "enrolled")
   const totalRevenue = enrolledStudents.reduce((sum, student) => sum + student.paymentAmount, 0)
-  const pendingEnquiries = mockEnquiries.filter((e) => e.status === "pending")
+  const pendingEnquiries = enquiries.filter((e) => e.status === "pending")
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -180,7 +187,7 @@ export default function AdminDashboard() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-              <p className="text-gray-600">Management Panel</p>
+              <p className="text-gray-600">Path2Ecom Management Panel</p>
             </div>
             <Button onClick={handleLogout} variant="outline">
               Logout
@@ -325,7 +332,7 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {mockEnquiries.map((enquiry) => (
+                  {enquiries.map((enquiry) => (
                     <div key={enquiry.id} className="border rounded-lg p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
@@ -362,10 +369,13 @@ export default function AdminDashboard() {
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-500">{new Date(enquiry.date).toLocaleDateString()}</span>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
-                            Reply
+                          <Button
+                            size="sm"
+                            onClick={() => handleMarkComplete(enquiry.id)}
+                            disabled={enquiry.status === "completed"}
+                          >
+                            {enquiry.status === "completed" ? "Completed" : "Mark Complete"}
                           </Button>
-                          <Button size="sm">Mark Complete</Button>
                         </div>
                       </div>
                     </div>
